@@ -1,3 +1,8 @@
+
+"use client"; 
+// Added "use client" because we'll be using useState here for tree data
+
+import { useState, type ReactNode } from 'react';
 import TreeTypeSection from '@/components/sections/TreeTypeSection';
 import TreeVisualizationPlaceholder from '@/components/interactive/TreeVisualizationPlaceholder';
 import OperationControls from '@/components/interactive/OperationControls';
@@ -5,33 +10,103 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableCaption } from '@/components/ui/table';
 import { Binary, GitCommitVertical, GitFork, GitPullRequestArrow, RotateCcw, Scaling, Workflow } from 'lucide-react';
 import Image from 'next/image';
+import { useToast } from "@/hooks/use-toast";
+
+// Basic tree data type placeholder
+type TreeData = number[]; // For now, a simple array of numbers
 
 export default function Home() {
+  const { toast } = useToast();
+
+  // State for each tree type
+  const [bTreeData, setBTreeData] = useState<TreeData>([]);
+  const [bPlusTreeData, setBPlusTreeData] = useState<TreeData>([]);
+  const [avlTreeData, setAvlTreeData] = useState<TreeData>([]);
+  const [redBlackTreeData, setRedBlackTreeData] = useState<TreeData>([]);
+
+  // Generic handler creator
+  const createTreeHandlers = (
+    treeName: string, 
+    setData: React.Dispatch<React.SetStateAction<TreeData>>
+  ) => {
+    const showToast = (operation: string, value: number) => {
+      toast({
+        title: `Árbol ${treeName}: Operación ${operation}`,
+        description: `Valor: ${value}. (Lógica no implementada)`,
+      });
+      console.log(`Árbol ${treeName}: ${operation} ${value}`);
+    };
+
+    return {
+      handleInsert: (value: number) => {
+        showToast("Insertar", value);
+        // Placeholder logic:
+        // setData(prevData => [...prevData, value].sort((a, b) => a - b));
+      },
+      handleDelete: (value: number) => {
+        showToast("Eliminar", value);
+        // Placeholder logic:
+        // setData(prevData => prevData.filter(item => item !== value));
+      },
+      handleSearch: (value: number) => {
+        showToast("Buscar", value);
+        // Placeholder logic:
+        // const found = data.includes(value);
+        // console.log(`Árbol ${treeName}: Valor ${value} ${found ? 'encontrado' : 'no encontrado'}`);
+      },
+    };
+  };
+
+  const bTreeHandlers = createTreeHandlers("B", setBTreeData);
+  const bPlusTreeHandlers = createTreeHandlers("B+", setBPlusTreeData);
+  const avlTreeHandlers = createTreeHandlers("AVL", setAvlTreeData);
+  const redBlackTreeHandlers = createTreeHandlers("Rojo-Negro", setRedBlackTreeData);
+
   const bTreeInteractive = (
     <>
       <TreeVisualizationPlaceholder treeName="B" />
-      <OperationControls />
+      <OperationControls 
+        treeName="B"
+        onInsert={bTreeHandlers.handleInsert}
+        onDelete={bTreeHandlers.handleDelete}
+        onSearch={bTreeHandlers.handleSearch}
+      />
     </>
   );
 
   const bPlusTreeInteractive = (
     <>
       <TreeVisualizationPlaceholder treeName="B+" />
-      <OperationControls />
+      <OperationControls
+        treeName="B+"
+        onInsert={bPlusTreeHandlers.handleInsert}
+        onDelete={bPlusTreeHandlers.handleDelete}
+        onSearch={bPlusTreeHandlers.handleSearch}
+      />
     </>
   );
 
   const avlTreeInteractive = (
     <>
       <TreeVisualizationPlaceholder treeName="AVL" />
-      <OperationControls />
+      <OperationControls
+        treeName="AVL"
+        onInsert={avlTreeHandlers.handleInsert}
+        onDelete={avlTreeHandlers.handleDelete}
+        onSearch={avlTreeHandlers.handleSearch}
+      />
     </>
   );
 
   const redBlackTreeInteractive = (
     <>
       <TreeVisualizationPlaceholder treeName="Rojo-Negro" />
-      <OperationControls />
+      <OperationControls
+        treeName="Rojo-Negro"
+        onInsert={redBlackTreeHandlers.handleInsert}
+        onDelete={redBlackTreeHandlers.handleDelete}
+        onSearch={redBlackTreeHandlers.handleSearch}
+      />
     </>
   );
 
