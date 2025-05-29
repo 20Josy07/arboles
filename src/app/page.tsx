@@ -131,14 +131,7 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
-      <section className="text-center py-8 bg-card shadow-md rounded-lg">
-        <h2 className="text-5xl font-extrabold text-primary mb-4 tracking-tight">
-          Bienvenido a Arboleda Interactiva
-        </h2>
-        <p className="text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
-          Una guía completa para entender las estructuras de datos de árbol más importantes: Árboles B, B+, AVL y Rojo-Negro. Explora sus definiciones, propiedades, aplicaciones y comparativas.
-        </p>
-      </section>
+      {/* Removed welcome section */}
 
       <TreeTypeSection
         title="Árboles B"
@@ -409,5 +402,7 @@ export default function Home() {
 
     </div>
   );
+
+    
 
     
