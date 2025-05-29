@@ -27,40 +27,59 @@ export default function Home() {
   // Generic handler creator
   const createTreeHandlers = (
     treeName: string, 
+    data: TreeData, // Pass current data
     setData: React.Dispatch<React.SetStateAction<TreeData>>
   ) => {
-    const showToast = (operation: string, value: number) => {
-      toast({
-        title: `Árbol ${treeName}: Operación ${operation}`,
-        description: `Valor: ${value}. (Lógica no implementada)`,
-      });
-      console.log(`Árbol ${treeName}: ${operation} ${value}`);
-    };
-
     return {
       handleInsert: (value: number) => {
-        showToast("Insertar", value);
-        // Placeholder logic:
-        // setData(prevData => [...prevData, value].sort((a, b) => a - b));
+        if (data.includes(value)) {
+          toast({
+            title: `Árbol ${treeName}: Valor Duplicado`,
+            description: `El valor ${value} ya existe en el árbol. (Lógica de árbol real no implementada)`,
+            variant: "destructive",
+          });
+          console.log(`Árbol ${treeName}: Intento de insertar valor duplicado ${value}`);
+          return;
+        }
+        setData(prevData => [...prevData, value].sort((a, b) => a - b));
+        toast({
+          title: `Árbol ${treeName}: Valor Insertado`,
+          description: `Valor: ${value}. (Estructura actual: array ordenado)`,
+        });
+        console.log(`Árbol ${treeName}: Insertado ${value}. Data actual: ${[...data, value].sort((a,b) => a - b)}`);
       },
       handleDelete: (value: number) => {
-        showToast("Eliminar", value);
-        // Placeholder logic:
-        // setData(prevData => prevData.filter(item => item !== value));
+        if (!data.includes(value)) {
+          toast({
+            title: `Árbol ${treeName}: Valor No Encontrado`,
+            description: `El valor ${value} no se encontró para eliminar. (Lógica de árbol real no implementada)`,
+            variant: "destructive",
+          });
+          console.log(`Árbol ${treeName}: Intento de eliminar valor no existente ${value}`);
+          return;
+        }
+        setData(prevData => prevData.filter(item => item !== value));
+        toast({
+          title: `Árbol ${treeName}: Valor Eliminado`,
+          description: `Valor: ${value}. (Estructura actual: array ordenado)`,
+        });
+        console.log(`Árbol ${treeName}: Eliminado ${value}. Data actual: ${data.filter(item => item !== value)}`);
       },
       handleSearch: (value: number) => {
-        showToast("Buscar", value);
-        // Placeholder logic:
-        // const found = data.includes(value);
-        // console.log(`Árbol ${treeName}: Valor ${value} ${found ? 'encontrado' : 'no encontrado'}`);
+        const found = data.includes(value);
+        toast({
+          title: `Árbol ${treeName}: Búsqueda de Valor`,
+          description: `Valor ${value} ${found ? 'ENCONTRADO' : 'NO ENCONTRADO'}. (Estructura actual: array ordenado)`,
+        });
+        console.log(`Árbol ${treeName}: Valor ${value} ${found ? 'encontrado' : 'no encontrado'}. Data actual: ${data}`);
       },
     };
   };
 
-  const bTreeHandlers = createTreeHandlers("B", setBTreeData);
-  const bPlusTreeHandlers = createTreeHandlers("B+", setBPlusTreeData);
-  const avlTreeHandlers = createTreeHandlers("AVL", setAvlTreeData);
-  const redBlackTreeHandlers = createTreeHandlers("Rojo-Negro", setRedBlackTreeData);
+  const bTreeHandlers = createTreeHandlers("B", bTreeData, setBTreeData);
+  const bPlusTreeHandlers = createTreeHandlers("B+", bPlusTreeData, setBPlusTreeData);
+  const avlTreeHandlers = createTreeHandlers("AVL", avlTreeData, setAvlTreeData);
+  const redBlackTreeHandlers = createTreeHandlers("Rojo-Negro", redBlackTreeData, setRedBlackTreeData);
 
   const bTreeInteractive = (
     <>
@@ -390,4 +409,5 @@ export default function Home() {
 
     </div>
   );
-}
+
+    
